@@ -12,7 +12,7 @@
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        const { useState } = React
+        const { useState, useEffect } = React
 
         function TrainingPlanPage() {
             const [trainingPlan, setTrainingPlan] = useState(null)
@@ -20,6 +20,8 @@
             const [workoutDistance, setWorkoutDistance] = useState('')
             const [workoutDuration, setWorkoutDuration] = useState('')
             const [workoutDate, setWorkoutDate] = useState('')
+            const [sortCriteria, setSortCriteria] = useState('date')
+            const [sortedWorkouts, setSortedWorkouts] = useState([])
 
             const handleCreatePlan = async () => {
                 const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
@@ -30,6 +32,12 @@
 
             const handleAddWorkout = async (e) => {
                 e.preventDefault()
+
+                if (!workoutType) {
+                    alert('Please select a workout type')
+                    return
+                }
+
                 const { default: Workout } = await import('./js/models/workout.js')
                 const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
                 const workout = new Workout(
@@ -48,32 +56,30 @@
             }
 
             return (
-                <div>
+                <>
                     <h1>Training Plan</h1>
                     {trainingPlan ? (
                         <div>
-                            <ul>
-                                {trainingPlan.allMyWorkout.map((workout, index) => (
-                                    <li key={index}>
-                                        {workout.type} - {workout.distance}km - {workout.duration} minutes
-                                    </li>
-                                ))}
-                            </ul>
                             <form onSubmit={handleAddWorkout}>
-                                <input
-                                    type="text"
-                                    placeholder="Workout Type"
+                                <select
                                     value={workoutType}
                                     onChange={(e) => setWorkoutType(e.target.value)}
-                                />
+                                >
+                                    <option value="">Select Workout Type</option>
+                                    <option value="running">Running</option>
+                                    <option value="swimming">Swimming</option>
+                                    <option value="cycling">Cycling</option>
+                                </select>
                                 <input
                                     type="number"
+                                    min="1"
                                     placeholder="Distance (km)"
                                     value={workoutDistance}
                                     onChange={(e) => setWorkoutDistance(e.target.value)}
                                 />
                                 <input
                                     type="number"
+                                    min="1"
                                     placeholder="Duration (minutes)"
                                     value={workoutDuration}
                                     onChange={(e) => setWorkoutDuration(e.target.value)}
@@ -86,11 +92,24 @@
                                 />
                                 <button type="submit">Add Workout</button>
                             </form>
+                            <br />
+                            <select value={sortCriteria} onChange={(e) => setSortCriteria(e.target.value)}>
+                                <option value="date">Date</option>
+                                <option value="distance">Distance</option>
+                                <option value="duration">Duration</option>
+                            </select>
+                            <ul>
+                                {trainingPlan.allMyWorkout.map((workout, index) => (
+                                    <li key={index}>
+                                        {workout.type} - {workout.distance}km - {workout.duration} minutes - {workout.date.toLocaleDateString()}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     ) : (
                         <button onClick={handleCreatePlan}>Create Training Plan</button>
                     )}
-                </div>
+                </>
             )
         }
 

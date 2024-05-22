@@ -35,8 +35,8 @@ export default class TrainingPlan {
 
     sortWorkouts(criteria) {
         const validCriteria = ['date', 'distance', 'duration']
-        if (!validCriteria.includes(criteria)) {
-            throw new Error('Invalid sort criteria')
+        if (!criteria || !validCriteria.includes(criteria)) {
+            return
         }
 
         switch (criteria) {
