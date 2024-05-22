@@ -3,25 +3,99 @@
 
 <head>
     <title>Training Plan App</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 
 <body>
     <div id="root"></div>
 
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel" data-type="module">
+        const { useState } = React
 
-    <script type="text/babel" src="js/models/Goal.js"></script>
-    <script type="text/babel" src="js/models/GoalManager.js"></script>
-    <script type="text/babel" src="js/models/Workout.js"></script>
-    <script type="text/babel" src="js/models/TrainingPlan.js"></script>
-    <!-- <script type="text/babel" src="js/views/GoalView.js"></script>
-    <script type="text/babel" src="js/views/WorkoutView.js"></script> -->
-    <script type="text/babel" src="js/views/TrainingPlanView.js"></script>
-    <script type="text/babel" src="js/controllers/TrainingPlanController.js"></script>
-    <script type="text/babel" src="js/app.js"></script>
+        function TrainingPlanPage() {
+            const [trainingPlan, setTrainingPlan] = useState(null)
+            const [workoutType, setWorkoutType] = useState('')
+            const [workoutDistance, setWorkoutDistance] = useState('')
+            const [workoutDuration, setWorkoutDuration] = useState('')
+            const [workoutDate, setWorkoutDate] = useState('')
+
+            const handleCreatePlan = async () => {
+                const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
+                const plan = new TrainingPlan()
+                plan.createPlan()
+                setTrainingPlan(plan)
+            }
+
+            const handleAddWorkout = async (e) => {
+                e.preventDefault()
+                const { default: Workout } = await import('./js/models/workout.js')
+                const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
+                const workout = new Workout(
+                    workoutType,
+                    parseFloat(workoutDistance),
+                    parseInt(workoutDuration),
+                    new Date(workoutDate)
+                )
+                const updatedPlan = new TrainingPlan()
+                updatedPlan.allMyWorkout = [...trainingPlan.allMyWorkout, workout]
+                setTrainingPlan(updatedPlan)
+                setWorkoutType('')
+                setWorkoutDistance('')
+                setWorkoutDuration('')
+                setWorkoutDate('')
+            }
+
+            return (
+                <div>
+                    <h1>Training Plan</h1>
+                    {trainingPlan ? (
+                        <div>
+                            <ul>
+                                {trainingPlan.allMyWorkout.map((workout, index) => (
+                                    <li key={index}>
+                                        {workout.type} - {workout.distance}km - {workout.duration} minutes
+                                    </li>
+                                ))}
+                            </ul>
+                            <form onSubmit={handleAddWorkout}>
+                                <input
+                                    type="text"
+                                    placeholder="Workout Type"
+                                    value={workoutType}
+                                    onChange={(e) => setWorkoutType(e.target.value)}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Distance (km)"
+                                    value={workoutDistance}
+                                    onChange={(e) => setWorkoutDistance(e.target.value)}
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Duration (minutes)"
+                                    value={workoutDuration}
+                                    onChange={(e) => setWorkoutDuration(e.target.value)}
+                                />
+                                <input
+                                    type="date"
+                                    placeholder="Date"
+                                    value={workoutDate}
+                                    onChange={(e) => setWorkoutDate(e.target.value)}
+                                />
+                                <button type="submit">Add Workout</button>
+                            </form>
+                        </div>
+                    ) : (
+                        <button onClick={handleCreatePlan}>Create Training Plan</button>
+                    )}
+                </div>
+            )
+        }
+
+        ReactDOM.render(<TrainingPlanPage />, document.getElementById('root'));
+    </script>
 </body>
 
 </html>

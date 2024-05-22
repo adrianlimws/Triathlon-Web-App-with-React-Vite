@@ -1,7 +1,7 @@
-import GoalManager from '../src/goalManager.js'
-import Workout from '../src/workout.js'
-import Goal from '../src/goal.js'
-import sqlite3 from 'sqlite3'
+import GoalManager from './goalManager.js'
+import Workout from './workout.js'
+import Goal from './goal.js'
+// import sqlite3 from 'sqlite3'
 
 /* uncomment if using with main.js console.log purposes */
 // import { LocalStorage } from 'node-localstorage'
