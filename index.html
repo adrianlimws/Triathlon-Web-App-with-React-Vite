@@ -12,7 +12,7 @@
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        const { useState } = React
+        const { useState, useMemo } = React
 
         function TrainingPlanPage() {
             const [trainingPlan, setTrainingPlan] = useState(null)
@@ -54,6 +54,30 @@
                 setWorkoutDate('')
             }
 
+            const handleSortChange = (e) => {
+                setSortCriteria(e.target.value)
+            }
+
+            const sortedWorkouts = useMemo(() => {
+                if (!trainingPlan) return []
+
+                const sorted = [...trainingPlan.allMyWorkout]
+                switch (sortCriteria) {
+                    case 'date':
+                        sorted.sort((a, b) => a.date - b.date)
+                        break
+                    case 'distance':
+                        sorted.sort((a, b) => a.distance - b.distance)
+                        break
+                    case 'duration':
+                        sorted.sort((a, b) => a.duration - b.duration)
+                        break
+                    default:
+                        break
+                }
+                return sorted
+            }, [trainingPlan, sortCriteria])
+
             return (
                 <>
                     <h1>Training Plan</h1>
@@ -92,13 +116,13 @@
                                 <button type="submit">Add Workout</button>
                             </form>
                             <br />
-                            <select value={sortCriteria} onChange={(e) => setSortCriteria(e.target.value)}>
+                            <select value={sortCriteria} onChange={handleSortChange}>
                                 <option value="date">Date</option>
                                 <option value="distance">Distance</option>
                                 <option value="duration">Duration</option>
                             </select>
                             <ul>
-                                {trainingPlan.allMyWorkout.map((workout, index) => (
+                                {sortedWorkouts.map((workout, index) => (
                                     <li key={index}>
                                         {workout.type} - {workout.distance}km - {workout.duration} minutes - {workout.date.toLocaleDateString()}
                                     </li>
