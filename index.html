@@ -21,6 +21,9 @@
             const [workoutDuration, setWorkoutDuration] = useState('')
             const [workoutDate, setWorkoutDate] = useState('')
             const [sortCriteria, setSortCriteria] = useState('date')
+            const [searchQuery, setSearchQuery] = useState('')
+            const [searchPerformed, setSearchPerformed] = useState(false)
+
 
             const handleCreatePlan = async () => {
                 const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
@@ -78,6 +81,20 @@
                 return sorted
             }, [trainingPlan, sortCriteria])
 
+            const handleSearchInputChange = (e) => {
+                const query = e.target.value
+                setSearchQuery(query)
+            }
+
+            const filteredWorkouts = useMemo(() => {
+                if (searchQuery.trim() === '') {
+                    return sortedWorkouts
+                }
+                return sortedWorkouts.filter((workout) =>
+                    workout.type.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+            }, [searchQuery, sortedWorkouts])
+
             return (
                 <>
                     <h1>Training Plan</h1>
@@ -121,13 +138,24 @@
                                 <option value="distance">Distance</option>
                                 <option value="duration">Duration</option>
                             </select>
-                            <ul>
-                                {sortedWorkouts.map((workout, index) => (
-                                    <li key={index}>
-                                        {workout.type} - {workout.distance}km - {workout.duration} minutes - {workout.date.toLocaleDateString()}
-                                    </li>
-                                ))}
-                            </ul>
+                            <br />
+                            <input
+                                type="text"
+                                placeholder="Search workouts"
+                                value={searchQuery}
+                                onChange={handleSearchInputChange}
+                            />
+                            {filteredWorkouts.length > 0 ? (
+                                <ul>
+                                    {filteredWorkouts.map((workout, index) => (
+                                        <li key={index}>
+                                            {workout.type} - {workout.distance}km - {workout.duration} minutes - {workout.date.toLocaleDateString()}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No workouts available. Please add a workout.</p>
+                            )}
                         </div>
                     ) : (
                         <button onClick={handleCreatePlan}>Create Training Plan</button>
