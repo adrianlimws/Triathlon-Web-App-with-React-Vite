@@ -26,7 +26,7 @@
 
 
             const handleCreatePlan = async () => {
-                const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
+                const { default: TrainingPlan } = await import('./models/trainingplan.js')
                 const plan = new TrainingPlan()
                 plan.createPlan()
                 setTrainingPlan(plan)
@@ -40,8 +40,8 @@
                     return
                 }
 
-                const { default: Workout } = await import('./js/models/workout.js')
-                const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
+                const { default: Workout } = await import('./models/workout.js')
+                const { default: TrainingPlan } = await import('./models/trainingplan.js')
                 const workout = new Workout(
                     workoutType,
                     parseFloat(workoutDistance),
@@ -59,7 +59,7 @@
 
             const handleDeleteWorkout = async (index) => {
                 if (trainingPlan) {
-                    const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
+                    const { default: TrainingPlan } = await import('./models/trainingplan.js')
                     const updatedPlan = new TrainingPlan()
                     updatedPlan.allMyWorkout = trainingPlan.allMyWorkout.filter((_, i) => i !== index)
                     setTrainingPlan(updatedPlan)
