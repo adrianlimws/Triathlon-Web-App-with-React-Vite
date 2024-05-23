@@ -57,6 +57,15 @@
                 setWorkoutDate('')
             }
 
+            const handleDeleteWorkout = async (index) => {
+                if (trainingPlan) {
+                    const { default: TrainingPlan } = await import('./js/models/trainingplan.js')
+                    const updatedPlan = new TrainingPlan()
+                    updatedPlan.allMyWorkout = trainingPlan.allMyWorkout.filter((_, i) => i !== index)
+                    setTrainingPlan(updatedPlan)
+                }
+            }
+
             const handleSortChange = (e) => {
                 setSortCriteria(e.target.value)
             }
@@ -94,6 +103,8 @@
                     workout.type.toLowerCase().includes(searchQuery.toLowerCase())
                 )
             }, [searchQuery, sortedWorkouts])
+
+
 
             return (
                 <>
@@ -150,6 +161,7 @@
                                     {filteredWorkouts.map((workout, index) => (
                                         <li key={index}>
                                             {workout.type} - {workout.distance}km - {workout.duration} minutes - {workout.date.toLocaleDateString()}
+                                            <button onClick={() => handleDeleteWorkout(index)}>Delete</button>
                                         </li>
                                     ))}
                                 </ul>
