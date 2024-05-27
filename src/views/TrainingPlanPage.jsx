@@ -7,6 +7,7 @@ function TrainingPlanPage({ viewModel }) {
   const [workoutDuration, setWorkoutDuration] = useState('')
   const [workoutDate, setWorkoutDate] = useState('')
   const [trainingPlan, setTrainingPlan] = useState(null)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     setTrainingPlan(viewModel.getTrainingPlan())
@@ -19,12 +20,28 @@ function TrainingPlanPage({ viewModel }) {
 
   const handleAddWorkout = (e) => {
     e.preventDefault()
-    viewModel.addWorkout(workoutType, workoutDistance, workoutDuration, workoutDate)
-    setTrainingPlan(viewModel.getTrainingPlan())
-    setWorkoutType('')
-    setWorkoutDistance('')
-    setWorkoutDuration('')
-    setWorkoutDate('')
+  
+    if (!workoutType) {
+      setError('Please select a workout type')
+      return
+    }
+  
+    if (!workoutDistance || !workoutDuration || !workoutDate) {
+      setError('Please fill in all the workout details')
+      return
+    }
+  
+    try {
+      viewModel.addWorkout(workoutType, workoutDistance, workoutDuration, workoutDate)
+      setTrainingPlan(viewModel.getTrainingPlan())
+      setWorkoutType('')
+      setWorkoutDistance('')
+      setWorkoutDuration('')
+      setWorkoutDate('')
+      setError('')
+    } catch (err) {
+      setError('An error occurred while adding the workout')
+    }
   }
 
   const handleDeleteWorkout = (index) => {
@@ -38,6 +55,7 @@ function TrainingPlanPage({ viewModel }) {
       {trainingPlan ? (
         <div>
           <form onSubmit={handleAddWorkout}>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <select
               value={workoutType}
               onChange={(e) => setWorkoutType(e.target.value)}
