@@ -45,9 +45,24 @@ function TrainingPlanPage({ viewModel }) {
   }
 
   const handleDeleteWorkout = (index) => {
-    viewModel.deleteWorkout(index)
-    setTrainingPlan(viewModel.getTrainingPlan())
+    try {
+      viewModel.deleteWorkout(index)
+      setTrainingPlan((prevPlan) => {
+        if (prevPlan) {
+          const updatedWorkouts = [...prevPlan.allMyWorkout]
+          updatedWorkouts.splice(index, 1)
+          return {
+            ...prevPlan,
+            allMyWorkout: updatedWorkouts,
+          }
+        }
+        return prevPlan
+      })
+    } catch (err) {
+      setError('An error occurred while deleting the workout')
+    }
   }
+
 
   return (
     <>
