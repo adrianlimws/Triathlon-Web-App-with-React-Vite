@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
-import WorkoutForm from './components/WorkoutForm'
-import WorkoutList from './components/WorkoutList'
-import WorkoutEditForm from './components/WorkoutEditForm'
-import TotalMetrics from './components/TotalMetrics'
+import WorkoutForm from '../components/WorkoutForm'
+import WorkoutList from '../components/WorkoutList'
+import WorkoutEditForm from '../components/WorkoutEditForm'
+import SortSearch from '../components/SortSearch'
+import TotalMetrics from '../components/TotalMetrics'
 import TrainingPlan from '../models/trainingplan'
 import Workout from '../models/workout'
 
@@ -227,26 +228,13 @@ function TrainingPlanPage({ viewModel }) {
                             setWorkoutDate={setWorkoutDate}
                         />
                     )}
-                    <div>
-                        <label htmlFor='sortCriteria'>Sort by:</label>
-                        <select
-                            id='sortCriteria'
-                            value={sortCriteria}
-                            onChange={handleSortChange}
-                        >
-                            <option value='date'>Date</option>
-                            <option value='distance'>Distance</option>
-                            <option value='duration'>Duration</option>
-                        </select>
-                        <br />
-                        <input
-                            type='text'
-                            placeholder='Search workouts'
-                            value={searchQuery}
-                            onChange={handleSearchInputChange}
-                        />
-                        <button onClick={handleSearch}>Search</button>
-                    </div>
+                    <SortSearch
+                        sortCriteria={sortCriteria}
+                        onSortChange={handleSortChange}
+                        searchQuery={searchQuery}
+                        onSearchInputChange={handleSearchInputChange}
+                        onSearch={handleSearch}
+                    />
                     {searchPerformed && filteredWorkouts.length === 0 && (
                         <p>No workouts found matching the search criteria.</p>
                     )}
