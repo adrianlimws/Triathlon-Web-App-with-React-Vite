@@ -4,12 +4,13 @@ import WorkoutForm from './components/WorkoutForm'
 import WorkoutList from './components/WorkoutList'
 import WorkoutEditForm from './components/WorkoutEditForm'
 import Workout from '../models/workout'
+import TotalMetrics from './components/TotalMetrics';
 
 function TrainingPlanPage({ viewModel }) {
-    const [workoutType, setWorkoutType] = useState('')
-    const [workoutDistance, setWorkoutDistance] = useState('')
-    const [workoutDuration, setWorkoutDuration] = useState('')
-    const [workoutDate, setWorkoutDate] = useState('')
+    const [workoutType, setWorkoutType] = useState('run')
+    const [workoutDistance, setWorkoutDistance] = useState('5')
+    const [workoutDuration, setWorkoutDuration] = useState('30')
+    const [workoutDate, setWorkoutDate] = useState(new Date().toISOString().slice(0, 10))
     const [trainingPlan, setTrainingPlan] = useState(null)
     const [error, setError] = useState('')
     const [sortCriteria, setSortCriteria] = useState('date')
@@ -53,15 +54,15 @@ function TrainingPlanPage({ viewModel }) {
 
   const handleDeleteWorkout = (workoutToDelete) => {
     try {
-      viewModel.deleteWorkout(workoutToDelete)
+      viewModel.deleteWorkout(workoutToDelete);
       const updatedWorkouts = trainingPlan.allMyWorkout.filter(
         (workout) => workout !== workoutToDelete
-      )
-      setTrainingPlan({ ...trainingPlan, allMyWorkout: updatedWorkouts })
+      );
+      setTrainingPlan({ ...trainingPlan, allMyWorkout: updatedWorkouts });
     } catch (err) {
-      setError('An error occurred while deleting the workout')
+      setError('An error occurred while deleting the workout');
     }
-  }
+  };
   
   const handleSortChange = (e) => {
     setSortCriteria(e.target.value)
@@ -188,11 +189,14 @@ function TrainingPlanPage({ viewModel }) {
             <p>No workouts found matching the search criteria.</p>
           )}
           {filteredWorkouts.length > 0 ? (
+            <>
             <WorkoutList
               workouts={filteredWorkouts}
               onDeleteWorkout={handleDeleteWorkout}
               onEditWorkout={handleEditWorkout}
             />
+            <TotalMetrics workouts={filteredWorkouts} />
+          </>
           ) : (
             <p>No workouts available. Please add a workout.</p>
           )}

@@ -18,6 +18,17 @@ function WorkoutList({ workouts, onDeleteWorkout, onEditWorkout  }) {
           <div>
             <strong>Date:</strong> {workout.date.toLocaleDateString()}
           </div>
+          {(() => {
+            const metrics = workout.calculateMetrics();
+            return (
+              <>
+                <div>
+                  <strong>Pace/Speed:</strong>{' '}
+                  {metrics.pace ? `${metrics.pace.toFixed(2)} min/km` : `${metrics.speed.toFixed(2)} km/h`}
+                </div>
+              </>
+            );
+          })()}
           <button onClick={() => onDeleteWorkout(workout)}>Delete</button>
           <button onClick={() => onEditWorkout(workout, index)}>Edit</button>
         </li>

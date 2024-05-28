@@ -40,9 +40,9 @@ function WorkoutEditForm({ workout, onSubmit, onCancel, onRevertChanges }) {
             onChange={(e) => setWorkoutType(e.target.value)}
         >
             <option value="">Select Workout Type</option>
-            <option value="running">Running</option>
-            <option value="swimming">Swimming</option>
-            <option value="cycling">Cycling</option>
+            <option value="run">Running</option>
+            <option value="swim">Swimming</option>
+            <option value="bike">Biking</option>
         </select>
         <input
             type="number"
