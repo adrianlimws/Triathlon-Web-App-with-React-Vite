@@ -113,7 +113,7 @@ function TrainingPlanPage({ viewModel }) {
       setTrainingPlan(viewModel.getTrainingPlan())
       setEditedWorkout(null)
       setEditedWorkoutIndex(null)
-      setOriginalWorkout(null)
+      setOriginalWorkout({ ...updatedWorkout }) // Store the updated workout details
     } catch (err) {
       setError('An error occurred while updating the workout')
     }
@@ -122,17 +122,22 @@ function TrainingPlanPage({ viewModel }) {
   const handleCancelEdit = () => {
     setEditedWorkout(null)
     setEditedWorkoutIndex(null)
-    setOriginalWorkout(null)
+    setOriginalWorkout(null) // Reset the originalWorkout state
   }
 
   const handleEditWorkout = (workout, index) => {
-    setEditedWorkout({ ...workout })
+    if (originalWorkout) {
+      setEditedWorkout({ ...originalWorkout })
+    } else {
+      setEditedWorkout({ ...workout })
+    }
     setEditedWorkoutIndex(index)
-    setOriginalWorkout(workout)
   }
-
+  
   const handleRevertChanges = () => {
-    setEditedWorkout(originalWorkout)
+    if (originalWorkout) {
+      setEditedWorkout({ ...originalWorkout })
+    }
   }
 
   
