@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
+import WorkoutForm from './components/WorkoutForm'
+import WorkoutList from './components/WorkoutList'
 
 function TrainingPlanPage({ viewModel }) {
   const [workoutType, setWorkoutType] = useState('')
@@ -9,6 +11,8 @@ function TrainingPlanPage({ viewModel }) {
   const [trainingPlan, setTrainingPlan] = useState(null)
   const [error, setError] = useState('')
   const [sortCriteria, setSortCriteria] = useState('date')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchPerformed, setSearchPerformed] = useState(false)
 
   useEffect(() => {
     setTrainingPlan(viewModel.getTrainingPlan())
@@ -45,25 +49,18 @@ function TrainingPlanPage({ viewModel }) {
     }
   }
 
-  const handleDeleteWorkout = (index) => {
+  const handleDeleteWorkout = (workoutToDelete) => {
     try {
-      viewModel.deleteWorkout(index)
-      setTrainingPlan((prevPlan) => {
-        if (prevPlan) {
-          const updatedWorkouts = [...prevPlan.allMyWorkout]
-          updatedWorkouts.splice(index, 1)
-          return {
-            ...prevPlan,
-            allMyWorkout: updatedWorkouts,
-          }
-        }
-        return prevPlan
-      })
+      viewModel.deleteWorkout(workoutToDelete)
+      const updatedWorkouts = trainingPlan.allMyWorkout.filter(
+        (workout) => workout !== workoutToDelete
+      )
+      setTrainingPlan({ ...trainingPlan, allMyWorkout: updatedWorkouts })
     } catch (err) {
       setError('An error occurred while deleting the workout')
     }
   }
-
+  
   const handleSortChange = (e) => {
     setSortCriteria(e.target.value)
   }
@@ -84,79 +81,75 @@ function TrainingPlanPage({ viewModel }) {
   })
 
 
+  const handleSearchInputChange = (e) => {
+    const query = e.target.value
+    setSearchQuery(query)
+    setSearchPerformed(false)
+  }
+
+  const handleSearch = () => {
+    setSearchPerformed(true)
+  }
+
+  const filteredWorkouts = useMemo(() => {
+    if (searchQuery.trim() === '') {
+      return sortedWorkouts
+    }
+    return sortedWorkouts.filter((workout) =>
+      workout.type.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [searchQuery, sortedWorkouts])
+
+
   return (
     <>
 {trainingPlan ? (
       <>
         <h1>Training Plan</h1>
-        <form onSubmit={handleAddWorkout}>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <select
-            value={workoutType}
-            onChange={(e) => setWorkoutType(e.target.value)}
-          >
-            <option value="">Select Workout Type</option>
-            <option value="running">Running</option>
-            <option value="swimming">Swimming</option>
-            <option value="cycling">Cycling</option>
-          </select>
-          <input
-            type="number"
-            min="1"
-            placeholder="Distance (km)"
-            value={workoutDistance}
-            onChange={(e) => setWorkoutDistance(e.target.value)}
+          <WorkoutForm
+            onSubmit={handleAddWorkout}
+            error={error}
+            workoutType={workoutType}
+            setWorkoutType={setWorkoutType}
+            workoutDistance={workoutDistance}
+            setWorkoutDistance={setWorkoutDistance}
+            workoutDuration={workoutDuration}
+            setWorkoutDuration={setWorkoutDuration}
+            workoutDate={workoutDate}
+            setWorkoutDate={setWorkoutDate}
           />
-          <input
-            type="number"
-            min="1"
-            placeholder="Duration (minutes)"
-            value={workoutDuration}
-            onChange={(e) => setWorkoutDuration(e.target.value)}
-          />
-          <input
-            type="date"
-            placeholder="Date"
-            value={workoutDate}
-            onChange={(e) => setWorkoutDate(e.target.value)}
-          />
-          <button type="submit">Add Workout</button>
-        </form>
-        <div>
+          <div>
           <label htmlFor="sortCriteria">Sort by:</label>
-          <select id="sortCriteria" value={sortCriteria} onChange={handleSortChange}>
-            <option value="date">Date</option>
-            <option value="distance">Distance</option>
-            <option value="duration">Duration</option>
+            <select id="sortCriteria" value={sortCriteria} onChange={handleSortChange}>
+                <option value="date">Date</option>
+                <option value="distance">Distance</option>
+                <option value="duration">Duration</option>
           </select>
         </div>
-        {sortedWorkouts.length > 0 ? (
-          <ul>
-            {sortedWorkouts.map((workout, index) => (
-              <li key={index}>
-                <div>
-                  <strong>Workout Type:</strong> {workout.type}
-                </div>
-                <div>
-                  <strong>Distance:</strong> {workout.distance} km
-                </div>
-                <div>
-                  <strong>Duration:</strong> {workout.duration} minutes
-                </div>
-                <div>
-                  <strong>Date:</strong> {workout.date.toLocaleDateString()}
-                </div>
-                <button onClick={() => handleDeleteWorkout(index)}>Delete</button>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No workouts available. Please add a workout.</p>
-        )}
-      </>
-    ) : (
-      <button onClick={handleCreatePlan}>Create Training Plan</button>
-    )}
+        <div>
+            <input
+              type="text"
+              placeholder="Search workouts"
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+            />
+            <button onClick={handleSearch}>Search</button>
+          </div>
+          {searchPerformed && filteredWorkouts.length === 0 && (
+            <p>No workouts found matching the search criteria.</p>
+          )}
+          {filteredWorkouts.length > 0 ? (
+            <WorkoutList
+              workouts={filteredWorkouts}
+              onDeleteWorkout={handleDeleteWorkout}
+            />
+          ) : (
+            <p>No workouts available. Please add a workout.</p>
+          )}
+        </>
+      ) : (
+        <button onClick={handleCreatePlan}>Create Training Plan</button>
+      )}
     </>
   )
 }

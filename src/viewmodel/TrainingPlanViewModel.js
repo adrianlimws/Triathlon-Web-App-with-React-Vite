@@ -30,11 +30,16 @@ export default class TrainingPlanViewModel {
         this.trainingPlan.addWorkout(workout)
     }
 
-    deleteWorkout(index) {
+    deleteWorkout(workout) {
         if (!this.trainingPlan) {
             throw new Error('Training plan not created')
         }
 
-        this.trainingPlan.deleteWorkout(index)
+        const index = this.trainingPlan.allMyWorkout.findIndex(
+            (w) => w === workout
+        )
+        if (index !== -1) {
+            this.trainingPlan.allMyWorkout.splice(index, 1)
+        }
     }
 }
