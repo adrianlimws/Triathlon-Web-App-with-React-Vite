@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 
-function WorkoutEditForm({ workout, onSubmit, onCancel }) {
+function WorkoutEditForm({ workout, onSubmit, onCancel, onRevertChanges }) {
     const [workoutType, setWorkoutType] = useState(workout.type)
     const [workoutDistance, setWorkoutDistance] = useState(workout.distance)
     const [workoutDuration, setWorkoutDuration] = useState(workout.duration)
@@ -44,6 +44,7 @@ function WorkoutEditForm({ workout, onSubmit, onCancel }) {
             value={workoutDate}
             onChange={(e) => setWorkoutDate(e.target.value)}
         />
+        <button type="button" onClick={onRevertChanges}>Revert Changes</button>
         <button type="submit">Update Workout</button>
         <button type="button" onClick={onCancel}>Cancel</button>
       </form>
@@ -57,6 +58,7 @@ function WorkoutEditForm({ workout, onSubmit, onCancel }) {
       duration: PropTypes.number.isRequired,
       date: PropTypes.instanceOf(Date).isRequired,
     }).isRequired,
+    onRevertChanges: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
   }

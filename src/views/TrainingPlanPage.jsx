@@ -17,6 +17,7 @@ function TrainingPlanPage({ viewModel }) {
     const [searchPerformed, setSearchPerformed] = useState(false)
     const [editedWorkout, setEditedWorkout] = useState(null)
     const [editedWorkoutIndex, setEditedWorkoutIndex] = useState(null)
+    const [originalWorkout, setOriginalWorkout] = useState(null)
 
   useEffect(() => {
     setTrainingPlan(viewModel.getTrainingPlan())
@@ -29,17 +30,14 @@ function TrainingPlanPage({ viewModel }) {
 
   const handleAddWorkout = (e) => {
     e.preventDefault()
-  
     if (!workoutType) {
       setError('Please select a workout type')
       return
     }
-  
     if (!workoutDistance || !workoutDuration || !workoutDate) {
       setError('Please fill in all the workout details')
       return
     }
-  
     try {
       viewModel.addWorkout(workoutType, workoutDistance, workoutDuration, workoutDate)
       setTrainingPlan(viewModel.getTrainingPlan())
@@ -115,6 +113,7 @@ function TrainingPlanPage({ viewModel }) {
       setTrainingPlan(viewModel.getTrainingPlan())
       setEditedWorkout(null)
       setEditedWorkoutIndex(null)
+      setOriginalWorkout(null)
     } catch (err) {
       setError('An error occurred while updating the workout')
     }
@@ -123,12 +122,20 @@ function TrainingPlanPage({ viewModel }) {
   const handleCancelEdit = () => {
     setEditedWorkout(null)
     setEditedWorkoutIndex(null)
+    setOriginalWorkout(null)
   }
 
   const handleEditWorkout = (workout, index) => {
-    setEditedWorkout(workout)
+    setEditedWorkout({ ...workout })
     setEditedWorkoutIndex(index)
+    setOriginalWorkout(workout)
   }
+
+  const handleRevertChanges = () => {
+    setEditedWorkout(originalWorkout)
+  }
+
+  
 
   return (
     <>
@@ -140,6 +147,7 @@ function TrainingPlanPage({ viewModel }) {
                 workout={editedWorkout}
                 onSubmit={handleUpdateWorkout}
                 onCancel={handleCancelEdit}
+                onRevertChanges={handleRevertChanges}
             />
             ) : (
             <WorkoutForm
