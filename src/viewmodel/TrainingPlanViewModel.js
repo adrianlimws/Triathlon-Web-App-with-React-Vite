@@ -62,4 +62,104 @@ export default class TrainingPlanViewModel {
         const savedPlan = localStorage.getItem('trainingPlan')
         return savedPlan ? JSON.parse(savedPlan) : null
     }
+
+    // IndexedDB methods
+    async saveToIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const dbName = 'TrainingPlanDB'
+            const storeName = 'trainingPlans'
+
+            const deleteRequest = indexedDB.deleteDatabase(dbName)
+            deleteRequest.onsuccess = () => {
+                console.log('Database deleted successfully')
+                const request = indexedDB.open(dbName, 1)
+
+                request.onerror = (event) => {
+                    console.error(
+                        'Error opening IndexedDB database:',
+                        event.target.error
+                    )
+                    reject(event.target.error)
+                }
+
+                request.onsuccess = (event) => {
+                    const db = event.target.result
+                    const transaction = db.transaction(storeName, 'readwrite')
+                    const objectStore = transaction.objectStore(storeName)
+                    const planData = {
+                        id: 'plan',
+                        workouts: this.trainingPlan.allMyWorkout,
+                    }
+
+                    const addRequest = objectStore.put(planData)
+
+                    addRequest.onsuccess = () => {
+                        console.log(
+                            'Training plan saved successfully to IndexedDB'
+                        )
+                        resolve()
+                    }
+
+                    addRequest.onerror = (event) => {
+                        console.error(
+                            'Error saving training plan to IndexedDB:',
+                            event.target.error
+                        )
+                        reject(event.target.error)
+                    }
+                }
+
+                request.onupgradeneeded = (event) => {
+                    console.log('onupgradeneeded event triggered')
+                    const db = event.target.result
+                    db.createObjectStore(storeName, { keyPath: 'id' })
+                }
+
+                deleteRequest.onerror = (event) => {
+                    console.error(
+                        'Error deleting database:',
+                        event.target.error
+                    )
+                    reject(event.target.error)
+                }
+            }
+        })
+    }
+
+    async loadFromIndexedDB() {
+        return new Promise((resolve, reject) => {
+            const dbName = 'TrainingPlanDB'
+            const storeName = 'trainingPlans'
+            const request = indexedDB.open(dbName, 1)
+
+            request.onerror = (event) => {
+                console.error(
+                    'Error opening IndexedDB database:',
+                    event.target.error
+                )
+                reject(event.target.error)
+            }
+
+            request.onsuccess = (event) => {
+                const db = event.target.result
+                const transaction = db.transaction(storeName, 'readonly')
+                const objectStore = transaction.objectStore(storeName)
+
+                const getRequest = objectStore.get('plan')
+
+                getRequest.onsuccess = (event) => {
+                    const plan = event.target.result
+                    resolve(plan)
+                }
+
+                getRequest.onerror = (event) => {
+                    console.error(
+                        'Error loading training plan from IndexedDB:',
+                        event.target.error
+                    )
+                    reject(event.target.error)
+                }
+            }
+        })
+    }
 }

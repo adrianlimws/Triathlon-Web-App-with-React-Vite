@@ -1,11 +1,5 @@
 import Workout from './workout.js'
 
-// import sqlite3 from 'sqlite3'
-
-/* uncomment if using with main.js console.log purposes */
-// import { LocalStorage } from 'node-localstorage'
-// const localStorage = new LocalStorage('./localstore')
-
 export default class TrainingPlan {
     constructor() {
         this.allMyWorkout = []
@@ -132,15 +126,12 @@ export default class TrainingPlan {
             this.saveToLocalStorage()
             console.log('Training plan saved successfully to localStorage')
 
-            const db = await this.connectToDatabase()
-            await this.createTableIfNotExists(db)
-            await this.insertPlanIntoDatabase(db)
-            db.close()
+            await this.saveToIndexedDB()
+            console.log('Training plan saved successfully to IndexedDB')
         } catch (error) {
             console.error('Error saving training plan:', error)
         }
     }
-
     // Save plan helpers
     saveToLocalStorage() {
         const planData = {
@@ -149,15 +140,6 @@ export default class TrainingPlan {
         console.log('saveToLocalStorage data', planData)
         //  works in node env, but if targeting browser use window.localStorage (demo in index.html)
         localStorage.setItem('trainingPlan', JSON.stringify(planData))
-    }
-
-    async insertPlanIntoDatabase(db) {
-        const planData = this.getPlanData()
-        try {
-            await this.runInsertQuery(db, planData)
-        } catch (error) {
-            throw new Error('Error inserting plan into the database')
-        }
     }
 
     getPlanData() {
@@ -183,41 +165,37 @@ export default class TrainingPlan {
     }
 
     async createTableIfNotExists(db) {
-        await new Promise((resolve, reject) => {
-            db.run(
-                'CREATE TABLE IF NOT EXISTS training_plans (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT)',
-                (err) => {
-                    if (err) {
-                        reject(err)
-                    } else {
-                        resolve()
-                    }
-                }
+        db.run(
+            'CREATE TABLE IF NOT EXISTS training_plans (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT)'
+        )
+    }
+
+    async insertPlanIntoDatabase(db) {
+        const planData = this.getPlanData()
+        try {
+            const stmt = db.prepare(
+                'INSERT INTO training_plans (data) VALUES (?)'
             )
-        })
+            stmt.run(JSON.stringify(planData))
+            stmt.free()
+        } catch (error) {
+            throw new Error('Error inserting plan into the database')
+        }
     }
 
     async loadPlan() {
-        let savedPlanFromDatabase = []
         try {
-            // load trainingplan from localStorage
             const savedPlanFromLocalStorage = this.loadFromLocalStorage()
             console.log(
-                'savedPlanFromLocalStorage: ',
+                'Loaded plan from localStorage:',
                 savedPlanFromLocalStorage
             )
 
-            try {
-                // try to connect to sqlite db
-                const db = await this.connectToDatabase()
-                savedPlanFromDatabase = await this.loadFromDatabase(db)
-                db.close()
-            } catch (error) {
-                console.error('Error connecting to the database:', error)
-            }
+            const savedPlanFromIndexedDB = await this.loadFromIndexedDB()
+            console.log('Loaded plan from IndexedDB:', savedPlanFromIndexedDB)
 
             const mergedPlan = this.mergePlans(
-                savedPlanFromDatabase,
+                savedPlanFromIndexedDB,
                 savedPlanFromLocalStorage
             )
 
@@ -250,7 +228,6 @@ export default class TrainingPlan {
     }
 
     loadFromLocalStorage() {
-        // works in node env, but if targeting browser use window.localStorage (demo in index.html)
         const savedPlan = localStorage.getItem('trainingPlan')
         return savedPlan ? JSON.parse(savedPlan) : null
     }
@@ -263,32 +240,5 @@ export default class TrainingPlan {
         } else {
             return null
         }
-    }
-
-    // db loading and db connectivity
-    async loadFromDatabase(db) {
-        return new Promise((resolve, reject) => {
-            db.all('SELECT data FROM training_plans', (err, rows) => {
-                if (err) {
-                    reject(err)
-                } else {
-                    resolve(rows.map((row) => JSON.parse(row.data)))
-                }
-            })
-        })
-    }
-
-    async connectToDatabase() {
-        return new Promise((resolve, reject) => {
-            const db = new sqlite3.Database('trainingPlan.db', (err) => {
-                if (err) {
-                    console.error('Error opening database:', err)
-                    reject(err)
-                } else {
-                    console.log('Connected to the SQLite database.')
-                    resolve(db)
-                }
-            })
-        })
     }
 }
