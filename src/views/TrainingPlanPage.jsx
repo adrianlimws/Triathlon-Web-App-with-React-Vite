@@ -206,28 +206,31 @@ function TrainingPlanPage({ viewModel }) {
         <>
             {trainingPlan ? (
                 <>
-                    <h1>Training Plan</h1>
-                    {editedWorkout ? (
-                        <WorkoutEditForm
-                            workout={editedWorkout}
-                            onSubmit={handleUpdateWorkout}
-                            onCancel={handleCancelEdit}
-                            onRevertChanges={handleRevertChanges}
-                        />
-                    ) : (
-                        <WorkoutForm
-                            onSubmit={handleAddWorkout}
-                            error={error}
-                            workoutType={workoutType}
-                            setWorkoutType={setWorkoutType}
-                            workoutDistance={workoutDistance}
-                            setWorkoutDistance={setWorkoutDistance}
-                            workoutDuration={workoutDuration}
-                            setWorkoutDuration={setWorkoutDuration}
-                            workoutDate={workoutDate}
-                            setWorkoutDate={setWorkoutDate}
-                        />
-                    )}
+                    <div className='wo-form'>
+                        <p className='tp-title'>Training Plan</p>
+                        {editedWorkout ? (
+                            <WorkoutEditForm
+                                workout={editedWorkout}
+                                onSubmit={handleUpdateWorkout}
+                                onCancel={handleCancelEdit}
+                                onRevertChanges={handleRevertChanges}
+                            />
+                        ) : (
+                            <WorkoutForm
+                                onSubmit={handleAddWorkout}
+                                error={error}
+                                workoutType={workoutType}
+                                setWorkoutType={setWorkoutType}
+                                workoutDistance={workoutDistance}
+                                setWorkoutDistance={setWorkoutDistance}
+                                workoutDuration={workoutDuration}
+                                setWorkoutDuration={setWorkoutDuration}
+                                workoutDate={workoutDate}
+                                setWorkoutDate={setWorkoutDate}
+                            />
+                        )}
+                    </div>
+
                     <SortSearch
                         sortCriteria={sortCriteria}
                         onSortChange={handleSortChange}
