@@ -2,17 +2,21 @@ import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import WorkoutForm from './components/WorkoutForm'
 import WorkoutList from './components/WorkoutList'
+import WorkoutEditForm from './components/WorkoutEditForm'
+import Workout from '../models/workout'
 
 function TrainingPlanPage({ viewModel }) {
-  const [workoutType, setWorkoutType] = useState('')
-  const [workoutDistance, setWorkoutDistance] = useState('')
-  const [workoutDuration, setWorkoutDuration] = useState('')
-  const [workoutDate, setWorkoutDate] = useState('')
-  const [trainingPlan, setTrainingPlan] = useState(null)
-  const [error, setError] = useState('')
-  const [sortCriteria, setSortCriteria] = useState('date')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchPerformed, setSearchPerformed] = useState(false)
+    const [workoutType, setWorkoutType] = useState('')
+    const [workoutDistance, setWorkoutDistance] = useState('')
+    const [workoutDuration, setWorkoutDuration] = useState('')
+    const [workoutDate, setWorkoutDate] = useState('')
+    const [trainingPlan, setTrainingPlan] = useState(null)
+    const [error, setError] = useState('')
+    const [sortCriteria, setSortCriteria] = useState('date')
+    const [searchQuery, setSearchQuery] = useState('')
+    const [searchPerformed, setSearchPerformed] = useState(false)
+    const [editedWorkout, setEditedWorkout] = useState(null)
+    const [editedWorkoutIndex, setEditedWorkoutIndex] = useState(null)
 
   useEffect(() => {
     setTrainingPlan(viewModel.getTrainingPlan())
@@ -65,7 +69,6 @@ function TrainingPlanPage({ viewModel }) {
     setSortCriteria(e.target.value)
   }
 
-
   const sortedWorkouts = trainingPlan ? [...trainingPlan.allMyWorkout] : []
   sortedWorkouts.sort((a, b) => {
     switch (sortCriteria) {
@@ -79,7 +82,6 @@ function TrainingPlanPage({ viewModel }) {
         return 0
     }
   })
-
 
   const handleSearchInputChange = (e) => {
     const query = e.target.value
@@ -101,23 +103,58 @@ function TrainingPlanPage({ viewModel }) {
   }, [searchQuery, sortedWorkouts])
 
 
+  const handleUpdateWorkout = (workoutType, workoutDistance, workoutDuration, workoutDate) => {
+    try {
+      const updatedWorkout = new Workout(
+        workoutType,
+        parseFloat(workoutDistance),
+        parseInt(workoutDuration),
+        new Date(workoutDate)
+      )
+      viewModel.updateWorkout(editedWorkoutIndex, updatedWorkout)
+      setTrainingPlan(viewModel.getTrainingPlan())
+      setEditedWorkout(null)
+      setEditedWorkoutIndex(null)
+    } catch (err) {
+      setError('An error occurred while updating the workout')
+    }
+  }
+  
+  const handleCancelEdit = () => {
+    setEditedWorkout(null)
+    setEditedWorkoutIndex(null)
+  }
+
+  const handleEditWorkout = (workout, index) => {
+    setEditedWorkout(workout)
+    setEditedWorkoutIndex(index)
+  }
+
   return (
     <>
 {trainingPlan ? (
       <>
         <h1>Training Plan</h1>
-          <WorkoutForm
-            onSubmit={handleAddWorkout}
-            error={error}
-            workoutType={workoutType}
-            setWorkoutType={setWorkoutType}
-            workoutDistance={workoutDistance}
-            setWorkoutDistance={setWorkoutDistance}
-            workoutDuration={workoutDuration}
-            setWorkoutDuration={setWorkoutDuration}
-            workoutDate={workoutDate}
-            setWorkoutDate={setWorkoutDate}
-          />
+        {editedWorkout ? (
+            <WorkoutEditForm
+                workout={editedWorkout}
+                onSubmit={handleUpdateWorkout}
+                onCancel={handleCancelEdit}
+            />
+            ) : (
+            <WorkoutForm
+                onSubmit={handleAddWorkout}
+                error={error}
+                workoutType={workoutType}
+                setWorkoutType={setWorkoutType}
+                workoutDistance={workoutDistance}
+                setWorkoutDistance={setWorkoutDistance}
+                workoutDuration={workoutDuration}
+                setWorkoutDuration={setWorkoutDuration}
+                workoutDate={workoutDate}
+                setWorkoutDate={setWorkoutDate}
+            />
+            )}
           <div>
           <label htmlFor="sortCriteria">Sort by:</label>
             <select id="sortCriteria" value={sortCriteria} onChange={handleSortChange}>
@@ -141,6 +178,7 @@ function TrainingPlanPage({ viewModel }) {
             <WorkoutList
               workouts={filteredWorkouts}
               onDeleteWorkout={handleDeleteWorkout}
+              onEditWorkout={handleEditWorkout}
             />
           ) : (
             <p>No workouts available. Please add a workout.</p>

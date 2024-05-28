@@ -42,4 +42,12 @@ export default class TrainingPlanViewModel {
             this.trainingPlan.allMyWorkout.splice(index, 1)
         }
     }
+
+    updateWorkout(index, updatedWorkout) {
+        if (!this.trainingPlan) {
+            throw new Error('Training plan not created')
+        }
+
+        this.trainingPlan.updateWorkout(index, updatedWorkout)
+    }
 }

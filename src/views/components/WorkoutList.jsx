@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function WorkoutList({ workouts, onDeleteWorkout }) {
+function WorkoutList({ workouts, onDeleteWorkout, onEditWorkout  }) {
   return (
     <ul>
       {workouts.map((workout, index) => (
@@ -19,6 +19,7 @@ function WorkoutList({ workouts, onDeleteWorkout }) {
             <strong>Date:</strong> {workout.date.toLocaleDateString()}
           </div>
           <button onClick={() => onDeleteWorkout(workout)}>Delete</button>
+          <button onClick={() => onEditWorkout(workout, index)}>Edit</button>
         </li>
       ))}
     </ul>
@@ -28,6 +29,7 @@ function WorkoutList({ workouts, onDeleteWorkout }) {
 WorkoutList.propTypes = {
   workouts: PropTypes.array.isRequired,
   onDeleteWorkout: PropTypes.func.isRequired,
+  onEditWorkout: PropTypes.func.isRequired
 }
 
 export default WorkoutList
