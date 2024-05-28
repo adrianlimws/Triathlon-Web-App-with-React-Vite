@@ -51,9 +51,9 @@ function TrainingPlanPage({ viewModel }) {
 
   return (
     <>
-      <h1>Training Plan</h1>
       {trainingPlan ? (
-        <div>
+          <>
+          <h1>Training Plan</h1>
           <form onSubmit={handleAddWorkout}>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <select
@@ -110,7 +110,7 @@ function TrainingPlanPage({ viewModel }) {
           ) : (
             <p>No workouts available. Please add a workout.</p>
           )}
-        </div>
+        </>
       ) : (
         <button onClick={handleCreatePlan}>Create Training Plan</button>
       )}
