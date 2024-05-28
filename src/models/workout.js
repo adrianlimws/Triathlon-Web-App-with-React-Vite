@@ -1,13 +1,9 @@
-import Goal from './goal.js'
-
 export default class Workout {
-    constructor(type, distance, duration, date, goal, reminder = null) {
+    constructor(type, distance, duration, date) {
         this.type = type
         this.distance = distance
         this.duration = duration
         this.date = date
-        this.goal = goal
-        this.reminder = reminder
     }
 
     calculateMetrics() {
@@ -33,23 +29,5 @@ export default class Workout {
             default:
                 throw new Error('Invalid workout type')
         }
-    }
-
-    hasGoal() {
-        return this.goal !== undefined
-    }
-
-    goalAchieved() {
-        if (!this.hasGoal()) {
-            return false
-        }
-
-        const metrics = this.calculateMetrics()
-        if (this.goal.type === 'distance') {
-            return metrics.distance >= this.goal.target
-        } else if (this.goal.type === 'duration') {
-            return metrics.duration <= this.goal.target
-        }
-        return false
     }
 }

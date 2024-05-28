@@ -1,6 +1,5 @@
-import GoalManager from './goalManager.js'
 import Workout from './workout.js'
-import Goal from './goal.js'
+
 // import sqlite3 from 'sqlite3'
 
 /* uncomment if using with main.js console.log purposes */
@@ -10,13 +9,10 @@ import Goal from './goal.js'
 export default class TrainingPlan {
     constructor() {
         this.allMyWorkout = []
-        this.goalManager = new GoalManager()
-        this.reminders = []
     }
 
     createPlan() {
         this.allMyWorkout = []
-        this.goalManager.allMyGoal = []
     }
 
     addWorkout(workout) {
@@ -24,13 +20,6 @@ export default class TrainingPlan {
             throw new Error('Invalid workout object')
         }
         this.allMyWorkout.push(workout)
-        if (workout.reminder) {
-            this.reminders.push(workout.reminder, workout)
-        }
-    }
-
-    addGoal(goal) {
-        this.goalManager.setGoal(goal)
     }
 
     sortWorkouts(criteria) {
@@ -115,8 +104,7 @@ export default class TrainingPlan {
             typeof workout.type === 'string' &&
             typeof workout.distance === 'number' &&
             typeof workout.duration === 'number' &&
-            workout.date instanceof Date &&
-            (!workout.reminder || workout.reminder instanceof Date)
+            workout.date instanceof Date
         )
     }
 
@@ -139,40 +127,6 @@ export default class TrainingPlan {
         return { totalDistance, totalDuration }
     }
 
-    // reminder methods
-    setReminder(reminderDateTime, workout) {
-        if (!(reminderDateTime instanceof Date)) {
-            throw new Error('Invalid reminder date and time')
-        }
-        const reminder = {
-            workout: workout,
-            reminderDateTime: reminderDateTime,
-        }
-        this.reminders.push(reminder)
-        this.scheduleReminder(reminder)
-    }
-
-    scheduleReminder(reminder, scheduler = setTimeout) {
-        const currentTime = new Date().getTime()
-        const reminderTime = reminder.reminderDateTime.getTime()
-        const delay = reminderTime - currentTime
-
-        if (delay > 0) {
-            scheduler(() => {
-                this.displayReminder(reminder)
-            }, delay)
-        }
-    }
-
-    displayReminder(reminder) {
-        const { workout } = reminder
-        console.log(
-            `Reminder: You have a pending ${
-                workout.type
-            } workout on ${workout.date.toLocaleDateString()}.`
-        )
-    }
-
     async savePlan() {
         try {
             this.saveToLocalStorage()
@@ -191,7 +145,6 @@ export default class TrainingPlan {
     saveToLocalStorage() {
         const planData = {
             workouts: this.allMyWorkout,
-            goals: this.goalManager.allMyGoal,
         }
         console.log('saveToLocalStorage data', planData)
         //  works in node env, but if targeting browser use window.localStorage (demo in index.html)
@@ -210,7 +163,6 @@ export default class TrainingPlan {
     getPlanData() {
         return {
             workouts: this.allMyWorkout,
-            goals: this.goalManager.allMyGoal,
         }
     }
 
@@ -273,10 +225,6 @@ export default class TrainingPlan {
                 this.allMyWorkout = this.parseWorkouts(
                     mergedPlan.workouts || []
                 )
-                this.goalManager.allMyGoal = this.parseGoals(
-                    mergedPlan.goals || []
-                )
-                this.reminders = this.extractReminders(this.allMyWorkout)
             } else {
                 this.resetPlan()
             }
@@ -292,26 +240,13 @@ export default class TrainingPlan {
                 workout.type,
                 workout.distance,
                 workout.duration,
-                new Date(workout.date),
-                workout.goal,
-                workout.reminder ? new Date(workout.reminder) : null
+                new Date(workout.date)
             )
         })
     }
 
-    parseGoals(goals) {
-        return goals.map((goal) => new Goal(goal.type, goal.target))
-    }
-
     resetPlan() {
         this.allMyWorkout = []
-        this.goalManager.allMyGoal = []
-    }
-
-    extractReminders(workouts) {
-        return workouts
-            .filter((workout) => workout.reminder)
-            .map((workout) => workout.reminder)
     }
 
     loadFromLocalStorage() {

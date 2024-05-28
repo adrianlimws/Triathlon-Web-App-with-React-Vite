@@ -5,6 +5,7 @@ import WorkoutList from './components/WorkoutList'
 import WorkoutEditForm from './components/WorkoutEditForm'
 import Workout from '../models/workout'
 import TotalMetrics from './components/TotalMetrics';
+import TrainingPlan from '../models/trainingplan'
 
 function TrainingPlanPage({ viewModel }) {
     const [workoutType, setWorkoutType] = useState('run')
@@ -141,6 +142,31 @@ function TrainingPlanPage({ viewModel }) {
     }
   }
 
+  const handleSavePlan = () => {
+    viewModel.saveToLocalStorage()
+    console.log('Training plan saved to localStorage')
+  }
+
+  const handleLoadPlan = () => {
+    try {
+      const loadedPlan = viewModel.loadFromLocalStorage()
+      if (loadedPlan) {
+        const newTrainingPlan = new TrainingPlan()
+        newTrainingPlan.allMyWorkout = loadedPlan.workouts.map((workout) => new Workout(
+          workout.type,
+          workout.distance,
+          workout.duration,
+          new Date(workout.date)
+        ))
+        setTrainingPlan(newTrainingPlan);
+        console.log('Training plan loaded from localStorage')
+      } else {
+        console.log('No saved training plan found in localStorage')
+      }
+    } catch (error) {
+      console.error('Error loading training plan from localStorage:', error)
+    }
+  }
   
 
   return (
@@ -196,9 +222,14 @@ function TrainingPlanPage({ viewModel }) {
               onEditWorkout={handleEditWorkout}
             />
             <TotalMetrics workouts={filteredWorkouts} />
+            <button onClick={handleSavePlan}>Save Training Plan</button>
+            <button onClick={handleLoadPlan}>Load Existing Training Plan</button>
           </>
           ) : (
-            <p>No workouts available. Please add a workout.</p>
+            <div>
+                <p>No workouts available. Please add a workout.</p>
+                <button onClick={handleLoadPlan}>Load Existing Training Plan</button>
+            </div>
           )}
         </>
       ) : (
