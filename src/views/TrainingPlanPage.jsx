@@ -206,7 +206,7 @@ function TrainingPlanPage({ viewModel }) {
         <>
             {trainingPlan ? (
                 <>
-                    <div className='wo-form'>
+                    <div className='workout-form'>
                         <p className='tp-title'>Training Plan</p>
                         {editedWorkout ? (
                             <WorkoutEditForm

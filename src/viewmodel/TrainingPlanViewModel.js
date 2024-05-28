@@ -79,7 +79,7 @@ export default class TrainingPlanViewModel {
                         'Error opening IndexedDB database:',
                         event.target.error
                     )
-                    reject(event.target.error)
+                    reject(new Error('Failed to open IndexedDB database'))
                 }
 
                 request.onsuccess = (event) => {
@@ -105,7 +105,11 @@ export default class TrainingPlanViewModel {
                             'Error saving training plan to IndexedDB:',
                             event.target.error
                         )
-                        reject(event.target.error)
+                        reject(
+                            new Error(
+                                'Failed to save training plan to IndexedDB'
+                            )
+                        )
                     }
                 }
 
@@ -120,7 +124,7 @@ export default class TrainingPlanViewModel {
                         'Error deleting database:',
                         event.target.error
                     )
-                    reject(event.target.error)
+                    reject(new Error('Failed to delete IndexedDB database'))
                 }
             }
         })
@@ -137,7 +141,7 @@ export default class TrainingPlanViewModel {
                     'Error opening IndexedDB database:',
                     event.target.error
                 )
-                reject(event.target.error)
+                reject(new Error('Failed to open IndexedDB database'))
             }
 
             request.onsuccess = (event) => {
@@ -157,7 +161,9 @@ export default class TrainingPlanViewModel {
                         'Error loading training plan from IndexedDB:',
                         event.target.error
                     )
-                    reject(event.target.error)
+                    reject(
+                        new Error('Failed to load training plan from IndexedDB')
+                    )
                 }
             }
         })
