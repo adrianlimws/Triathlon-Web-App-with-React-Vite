@@ -195,6 +195,7 @@ function TrainingPlanPage({ viewModel }) {
                     console.log('Training plan loaded from localStorage')
                 } else {
                     console.log('No saved training plan found')
+                    alert('No existing plan found.')
                 }
             }
         } catch (error) {
@@ -207,7 +208,9 @@ function TrainingPlanPage({ viewModel }) {
             {trainingPlan ? (
                 <>
                     <div className='workout-form'>
-                        <p className='tp-title'>Training Plan</p>
+                        <h2 className='tp-title'>Training Plan</h2>
+                        <TotalMetrics workouts={filteredWorkouts} />
+
                         {editedWorkout ? (
                             <WorkoutEditForm
                                 workout={editedWorkout}
@@ -248,7 +251,6 @@ function TrainingPlanPage({ viewModel }) {
                                 onDeleteWorkout={handleDeleteWorkout}
                                 onEditWorkout={handleEditWorkout}
                             />
-                            <TotalMetrics workouts={filteredWorkouts} />
                             <button onClick={handleSavePlan}>Save Plan</button>
                             <button onClick={handleLoadPlan}>
                                 Load Existing Plan

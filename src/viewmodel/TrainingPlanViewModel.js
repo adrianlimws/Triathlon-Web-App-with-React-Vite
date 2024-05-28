@@ -55,11 +55,11 @@ export default class TrainingPlanViewModel {
         const planData = {
             workouts: this.trainingPlan.allMyWorkout,
         }
-        localStorage.setItem('trainingPlan', JSON.stringify(planData))
+        window.localStorage.setItem('trainingPlan', JSON.stringify(planData))
     }
 
     loadFromLocalStorage() {
-        const savedPlan = localStorage.getItem('trainingPlan')
+        const savedPlan = window.localStorage.getItem('trainingPlan')
         return savedPlan ? JSON.parse(savedPlan) : null
     }
 

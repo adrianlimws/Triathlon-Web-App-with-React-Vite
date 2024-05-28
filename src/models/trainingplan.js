@@ -16,7 +16,7 @@ export default class TrainingPlan {
         this.allMyWorkout.push(workout)
     }
 
-    sortWorkouts(criteria) {
+    sortWorkouts(criteria, workoutsArray = this.allMyWorkout) {
         const validCriteria = ['date', 'distance', 'duration']
         if (!criteria || !validCriteria.includes(criteria)) {
             return
@@ -24,27 +24,27 @@ export default class TrainingPlan {
 
         switch (criteria) {
             case 'date':
-                this.sortByDate()
+                this.sortByDate(workoutsArray)
                 break
             case 'distance':
-                this.sortByDistance()
+                this.sortByDistance(workoutsArray)
                 break
             case 'duration':
-                this.sortByDuration()
+                this.sortByDuration(workoutsArray)
                 break
         }
     }
 
-    sortByDate() {
-        this.allMyWorkout.sort((a, b) => a.date - b.date)
+    sortByDate(workoutsArray) {
+        workoutsArray.sort((a, b) => a.date - b.date)
     }
 
-    sortByDistance() {
-        this.allMyWorkout.sort((a, b) => a.distance - b.distance)
+    sortByDistance(workoutsArray) {
+        workoutsArray.sort((a, b) => a.distance - b.distance)
     }
 
-    sortByDuration() {
-        this.allMyWorkout.sort((a, b) => a.duration - b.duration)
+    sortByDuration(workoutsArray) {
+        workoutsArray.sort((a, b) => a.duration - b.duration)
     }
 
     searchWorkouts(criteria, value) {
@@ -139,7 +139,7 @@ export default class TrainingPlan {
         }
         console.log('saveToLocalStorage data', planData)
         //  works in node env, but if targeting browser use window.localStorage (demo in index.html)
-        localStorage.setItem('trainingPlan', JSON.stringify(planData))
+        window.localStorage.setItem('trainingPlan', JSON.stringify(planData))
     }
 
     getPlanData() {
@@ -228,7 +228,7 @@ export default class TrainingPlan {
     }
 
     loadFromLocalStorage() {
-        const savedPlan = localStorage.getItem('trainingPlan')
+        const savedPlan = window.localStorage.getItem('trainingPlan')
         return savedPlan ? JSON.parse(savedPlan) : null
     }
 
