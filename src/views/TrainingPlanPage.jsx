@@ -125,16 +125,15 @@ function TrainingPlanPage({ viewModel }) {
                 <option value="distance">Distance</option>
                 <option value="duration">Duration</option>
           </select>
-        </div>
-        <div>
-            <input
+          <br />
+          <input
               type="text"
               placeholder="Search workouts"
               value={searchQuery}
               onChange={handleSearchInputChange}
             />
             <button onClick={handleSearch}>Search</button>
-          </div>
+        </div>
           {searchPerformed && filteredWorkouts.length === 0 && (
             <p>No workouts found matching the search criteria.</p>
           )}
