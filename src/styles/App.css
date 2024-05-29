@@ -26,6 +26,12 @@
     padding: 1rem 0;
 }
 
+.edit-input-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .input-field {
     display: flex;
     align-items: center;

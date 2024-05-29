@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
+import DatabaseConfig from '../components/DatabaseConfiguration'
 import WorkoutForm from '../components/WorkoutForm'
 import WorkoutList from '../components/WorkoutList'
 import WorkoutEditForm from '../components/WorkoutEditForm'
@@ -39,8 +40,16 @@ function TrainingPlanPage({ viewModel }) {
             setError('Please select a workout type')
             return
         }
-        if (!workoutDistance || !workoutDuration || !workoutDate) {
-            setError('Please fill in all the workout details')
+        if (!workoutDistance) {
+            setError('Please fill in workout distance')
+            return
+        }
+        if (!workoutDuration) {
+            setError('Please fill in workout duration')
+            return
+        }
+        if (!workoutDate) {
+            setError('Please select a date for the workout')
             return
         }
         try {
@@ -68,8 +77,10 @@ function TrainingPlanPage({ viewModel }) {
                 (workout) => workout !== workoutToDelete
             )
             setTrainingPlan({ ...trainingPlan, allMyWorkout: updatedWorkouts })
+            alert('Workout deleted successfully!')
         } catch (err) {
             setError('An error occurred while deleting the workout')
+            alert('Failed to delete the workout. Please try again.')
         }
     }
 
@@ -177,7 +188,7 @@ function TrainingPlanPage({ viewModel }) {
                     )
                 setTrainingPlan(newTrainingPlan)
                 viewModel.trainingPlan = newTrainingPlan
-                viewModel.saveToLocalStorage() // Save the loaded plan to localStorage
+                viewModel.saveToLocalStorage()
                 console.log('Training plan loaded from IndexedDB')
             } else {
                 const loadedPlanFromLocalStorage =
@@ -207,6 +218,11 @@ function TrainingPlanPage({ viewModel }) {
         }
     }
 
+    const handleDatabaseConfig = (config) => {
+        // Save the database configuration
+        viewModel.saveDatabaseConfig(config)
+    }
+
     return (
         <>
             {trainingPlan ? (
@@ -217,7 +233,6 @@ function TrainingPlanPage({ viewModel }) {
                             Load Existing Plan
                         </button>
                     </div>
-                    <TotalMetrics workouts={filteredWorkouts} />
 
                     <div className='workout-form'>
                         {editedWorkout ? (
@@ -242,7 +257,7 @@ function TrainingPlanPage({ viewModel }) {
                             />
                         )}
                     </div>
-
+                    <TotalMetrics workouts={filteredWorkouts} />
                     <SortSearch
                         sortCriteria={sortCriteria}
                         onSortChange={handleSortChange}
@@ -261,6 +276,7 @@ function TrainingPlanPage({ viewModel }) {
                                 onEditWorkout={handleEditWorkout}
                             />
                             <button onClick={handleSavePlan}>Save Plan</button>
+                            <DatabaseConfig onSubmit={handleDatabaseConfig} />
                         </>
                     ) : (
                         <div>

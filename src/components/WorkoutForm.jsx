@@ -23,6 +23,7 @@ function WorkoutForm({
                     value={workoutType}
                     onChange={(e) => setWorkoutType(e.target.value)}
                 >
+                    <option value=''>Select Workout Type</option>
                     <option value='run'>Running</option>
                     <option value='swim'>Swimming</option>
                     <option value='bike'>Biking</option>
