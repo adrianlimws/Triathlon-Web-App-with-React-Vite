@@ -207,10 +207,15 @@ function TrainingPlanPage({ viewModel }) {
         <>
             {trainingPlan ? (
                 <>
-                    <div className='workout-form'>
+                    <div className='plan-header'>
                         <h2 className='tp-title'>Training Plan</h2>
                         <TotalMetrics workouts={filteredWorkouts} />
+                        <button onClick={handleLoadPlan}>
+                            Load Existing Plan
+                        </button>
+                    </div>
 
+                    <div className='workout-form'>
                         {editedWorkout ? (
                             <WorkoutEditForm
                                 workout={editedWorkout}
@@ -259,9 +264,6 @@ function TrainingPlanPage({ viewModel }) {
                     ) : (
                         <div>
                             <p>No workouts available. Please add a workout.</p>
-                            <button onClick={handleLoadPlan}>
-                                Load Existing Plan
-                            </button>
                         </div>
                     )}
                 </>
