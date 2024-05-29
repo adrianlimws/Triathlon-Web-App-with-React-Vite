@@ -9,7 +9,7 @@ function SortAndSearch({
     onSearch,
 }) {
     return (
-        <div className='sort-and-search'>
+        <div className='sort-search'>
             <div className='sort-section'>
                 <label htmlFor='sortCriteria'>Sort by:</label>
                 <select

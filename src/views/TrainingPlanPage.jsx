@@ -127,7 +127,7 @@ function TrainingPlanPage({ viewModel }) {
             setTrainingPlan(viewModel.getTrainingPlan())
             setEditedWorkout(null)
             setEditedWorkoutIndex(null)
-            setOriginalWorkout({ ...updatedWorkout }) // Store the updated workout details
+            setOriginalWorkout({ ...updatedWorkout })
         } catch (err) {
             setError('An error occurred while updating the workout')
         }
@@ -136,7 +136,7 @@ function TrainingPlanPage({ viewModel }) {
     const handleCancelEdit = () => {
         setEditedWorkout(null)
         setEditedWorkoutIndex(null)
-        setOriginalWorkout(null) // Reset the originalWorkout state
+        setOriginalWorkout(null)
     }
 
     const handleEditWorkout = (workout, index) => {
@@ -242,7 +242,7 @@ function TrainingPlanPage({ viewModel }) {
                         onSearch={handleSearch}
                     />
                     {searchPerformed && filteredWorkouts.length === 0 && (
-                        <p>No workouts found matching the search criteria.</p>
+                        <p>No workouts matching the search criteria.</p>
                     )}
                     {filteredWorkouts.length > 0 ? (
                         <>
