@@ -31,6 +31,7 @@ function WorkoutForm({
                 type='number'
                 value={workoutDistance}
                 onChange={(e) => setWorkoutDistance(e.target.value)}
+                step={0.01}
             />
             <InputField
                 label='Duration (minutes): '

@@ -3,6 +3,14 @@
     padding: 0 2rem;
 }
 
+.plan-header {
+    display: flex;
+}
+
+.total-metrics {
+    display: flex;
+}
+
 /* forms */
 
 .wo-form {

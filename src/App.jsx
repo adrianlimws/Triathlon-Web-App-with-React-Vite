@@ -1,4 +1,4 @@
-import './App.css'
+import './styles/App.css'
 import TrainingPlanPage from './views/TrainingPlanPage'
 import TrainingPlanViewModel from './viewmodel/TrainingPlanViewModel'
 
@@ -6,10 +6,14 @@ function App() {
     const viewModel = new TrainingPlanViewModel()
 
     return (
-        <div className='main'>
-            <h1>Training Plan App</h1>
-            <TrainingPlanPage viewModel={viewModel} />
-        </div>
+        <>
+            <nav className='navbar'>
+                <h1>Triathlon App</h1>
+            </nav>
+            <div className='main'>
+                <TrainingPlanPage viewModel={viewModel} />
+            </div>
+        </>
     )
 }
 

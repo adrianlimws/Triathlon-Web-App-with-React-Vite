@@ -46,7 +46,7 @@ function TrainingPlanPage({ viewModel }) {
         try {
             viewModel.addWorkout(
                 workoutType,
-                workoutDistance,
+                parseFloat(workoutDistance),
                 workoutDuration,
                 workoutDate
             )
@@ -257,9 +257,6 @@ function TrainingPlanPage({ viewModel }) {
                                 onEditWorkout={handleEditWorkout}
                             />
                             <button onClick={handleSavePlan}>Save Plan</button>
-                            <button onClick={handleLoadPlan}>
-                                Load Existing Plan
-                            </button>
                         </>
                     ) : (
                         <div>
