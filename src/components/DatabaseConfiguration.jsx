@@ -29,8 +29,6 @@ function DatabaseConfig({ onSubmit, onLoadPlan }) {
                         onChange={(e) => setDatabaseType(e.target.value)}
                     >
                         <option value='indexedDB'>IndexedDB</option>
-                        <option value='sqlite'>SQLite</option>
-                        <option value='mysql'>MySQL</option>
                     </select>
                 </label>
                 <label>
