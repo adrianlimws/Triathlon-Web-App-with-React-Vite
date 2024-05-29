@@ -17,21 +17,22 @@ function WorkoutForm({
     return (
         <form onSubmit={onSubmit}>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <label>Workout: </label>
-            <select
-                value={workoutType}
-                onChange={(e) => setWorkoutType(e.target.value)}
-            >
-                <option value='run'>Running</option>
-                <option value='swim'>Swimming</option>
-                <option value='bike'>Biking</option>
-            </select>
+            <div className='input-field'>
+                <label>Workout: </label>
+                <select
+                    value={workoutType}
+                    onChange={(e) => setWorkoutType(e.target.value)}
+                >
+                    <option value='run'>Running</option>
+                    <option value='swim'>Swimming</option>
+                    <option value='bike'>Biking</option>
+                </select>
+            </div>
             <InputField
                 label='Distance (km): '
                 type='number'
                 value={workoutDistance}
                 onChange={(e) => setWorkoutDistance(e.target.value)}
-                step={0.01}
             />
             <InputField
                 label='Duration (minutes): '

@@ -20,7 +20,7 @@ function TotalMetrics({ workouts }) {
     return (
         <div className='total-metrics'>
             <p>Total Distance: {totalDistance.toFixed(2)} km</p>
-            <p>Total Duration: {totalDuration.toFixed(2)} hours</p>
+            <p>Total Duration: {totalDuration.toFixed(1)} hours</p>
         </div>
     )
 }

@@ -162,27 +162,30 @@ function TrainingPlanPage({ viewModel }) {
 
     const handleLoadPlan = async () => {
         try {
-            const loadedPlan = await viewModel.loadFromIndexedDB()
-            if (loadedPlan) {
+            const loadedPlanFromIndexedDB = await viewModel.loadFromIndexedDB()
+            if (loadedPlanFromIndexedDB) {
                 const newTrainingPlan = new TrainingPlan()
-                newTrainingPlan.allMyWorkout = loadedPlan.workouts.map(
-                    (workout) =>
-                        new Workout(
-                            workout.type,
-                            workout.distance,
-                            workout.duration,
-                            new Date(workout.date)
-                        )
-                )
+                newTrainingPlan.allMyWorkout =
+                    loadedPlanFromIndexedDB.workouts.map(
+                        (workout) =>
+                            new Workout(
+                                workout.type,
+                                workout.distance,
+                                workout.duration,
+                                new Date(workout.date)
+                            )
+                    )
                 setTrainingPlan(newTrainingPlan)
+                viewModel.trainingPlan = newTrainingPlan
+                viewModel.saveToLocalStorage() // Save the loaded plan to localStorage
                 console.log('Training plan loaded from IndexedDB')
             } else {
-                const savedPlanFromLocalStorage =
+                const loadedPlanFromLocalStorage =
                     viewModel.loadFromLocalStorage()
-                if (savedPlanFromLocalStorage) {
+                if (loadedPlanFromLocalStorage) {
                     const newTrainingPlan = new TrainingPlan()
                     newTrainingPlan.allMyWorkout =
-                        savedPlanFromLocalStorage.workouts.map(
+                        loadedPlanFromLocalStorage.workouts.map(
                             (workout) =>
                                 new Workout(
                                     workout.type,
@@ -192,10 +195,11 @@ function TrainingPlanPage({ viewModel }) {
                                 )
                         )
                     setTrainingPlan(newTrainingPlan)
+                    viewModel.trainingPlan = newTrainingPlan
                     console.log('Training plan loaded from localStorage')
                 } else {
                     console.log('No saved training plan found')
-                    alert('No existing plan found.')
+                    alert('No existing plans can be loaded.')
                 }
             }
         } catch (error) {
@@ -209,11 +213,11 @@ function TrainingPlanPage({ viewModel }) {
                 <>
                     <div className='plan-header'>
                         <h2 className='tp-title'>Training Plan</h2>
-                        <TotalMetrics workouts={filteredWorkouts} />
                         <button onClick={handleLoadPlan}>
                             Load Existing Plan
                         </button>
                     </div>
+                    <TotalMetrics workouts={filteredWorkouts} />
 
                     <div className='workout-form'>
                         {editedWorkout ? (
