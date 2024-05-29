@@ -9,11 +9,14 @@ function DatabaseConfig({ onSubmit, onLoadPlan }) {
     const handleSubmit = (e) => {
         e.preventDefault()
         onSubmit({ databaseType, databaseName })
-        alert(`Database Name Saved: ${databaseName}`)
+        alert(
+            `You have selected the database "${databaseName}" as save location.`
+        )
     }
 
     const handleLoadPlan = () => {
         onLoadPlan(loadDatabaseName)
+        alert(`You have loaded ${loadDatabaseName} from the database.`)
     }
 
     return (
