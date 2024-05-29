@@ -266,7 +266,7 @@ function TrainingPlanPage({ viewModel }) {
                     )}
                 </>
             ) : (
-                <button onClick={handleCreatePlan}>Create Training Plan</button>
+                <button onClick={handleCreatePlan}>Create Plan</button>
             )}
         </>
     )

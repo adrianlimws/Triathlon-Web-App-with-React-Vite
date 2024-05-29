@@ -14,3 +14,7 @@
 .input-field {
     margin-bottom: 10px;
 }
+
+.sort-search {
+    display: flex;
+}

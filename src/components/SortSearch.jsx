@@ -11,7 +11,7 @@ function SortAndSearch({
     return (
         <div className='sort-search'>
             <div className='sort-section'>
-                <label htmlFor='sortCriteria'>Sort by:</label>
+                <label htmlFor='sortCriteria'>Sort by: </label>
                 <select
                     id='sortCriteria'
                     value={sortCriteria}
@@ -22,6 +22,7 @@ function SortAndSearch({
                     <option value='duration'>Duration</option>
                 </select>
             </div>
+
             <div className='search-section'>
                 <input
                     type='text'
