@@ -29,6 +29,10 @@ function TrainingPlanPage({ viewModel }) {
         setTrainingPlan(viewModel.getTrainingPlan())
     }, [viewModel])
 
+    const handleDatabaseConfig = (config) => {
+        viewModel.saveDatabaseConfig(config)
+    }
+
     const handleCreatePlan = () => {
         viewModel.createTrainingPlan()
         setTrainingPlan(viewModel.getTrainingPlan())
@@ -171,9 +175,11 @@ function TrainingPlanPage({ viewModel }) {
         console.log('Training plan saved to localStorage and IndexedDB')
     }
 
-    const handleLoadPlan = async () => {
+    const handleLoadPlan = async (databaseName) => {
         try {
-            const loadedPlanFromIndexedDB = await viewModel.loadFromIndexedDB()
+            const loadedPlanFromIndexedDB = await viewModel.loadFromIndexedDB(
+                databaseName
+            )
             if (loadedPlanFromIndexedDB) {
                 const newTrainingPlan = new TrainingPlan()
                 newTrainingPlan.allMyWorkout =
@@ -218,20 +224,17 @@ function TrainingPlanPage({ viewModel }) {
         }
     }
 
-    const handleDatabaseConfig = (config) => {
-        // Save the database configuration
-        viewModel.saveDatabaseConfig(config)
-    }
-
     return (
         <>
             {trainingPlan ? (
                 <>
                     <div className='plan-header'>
                         <h2 className='tp-title'>Training Plan</h2>
-                        <button onClick={handleLoadPlan}>
-                            Load Existing Plan
-                        </button>
+                        <DatabaseConfig
+                            className='database-config'
+                            onSubmit={handleDatabaseConfig}
+                            onLoadPlan={handleLoadPlan}
+                        />
                     </div>
 
                     <div className='workout-form'>
@@ -276,7 +279,6 @@ function TrainingPlanPage({ viewModel }) {
                                 onEditWorkout={handleEditWorkout}
                             />
                             <button onClick={handleSavePlan}>Save Plan</button>
-                            <DatabaseConfig onSubmit={handleDatabaseConfig} />
                         </>
                     ) : (
                         <div>
