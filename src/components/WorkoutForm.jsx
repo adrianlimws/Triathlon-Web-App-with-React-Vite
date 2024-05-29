@@ -34,12 +34,14 @@ function WorkoutForm({
                 type='number'
                 value={workoutDistance}
                 onChange={(e) => setWorkoutDistance(e.target.value)}
+                min={1}
             />
             <InputField
                 label='Duration (minutes): '
                 type='number'
                 value={workoutDuration}
                 onChange={(e) => setWorkoutDuration(e.target.value)}
+                min={1}
             />
             <InputField
                 label='Date: '

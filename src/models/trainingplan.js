@@ -1,5 +1,3 @@
-import Workout from './workout.js'
-
 export default class TrainingPlan {
     constructor() {
         this.allMyWorkout = []
@@ -132,15 +130,6 @@ export default class TrainingPlan {
             console.error('Error saving training plan:', error)
         }
     }
-    // Save plan helpers
-    saveToLocalStorage() {
-        const planData = {
-            workouts: this.allMyWorkout,
-        }
-        console.log('saveToLocalStorage data', planData)
-        //  works in node env, but if targeting browser use window.localStorage (demo in index.html)
-        window.localStorage.setItem('trainingPlan', JSON.stringify(planData))
-    }
 
     getPlanData() {
         return {
@@ -183,53 +172,8 @@ export default class TrainingPlan {
         }
     }
 
-    async loadPlan() {
-        try {
-            const savedPlanFromLocalStorage = this.loadFromLocalStorage()
-            console.log(
-                'Loaded plan from localStorage:',
-                savedPlanFromLocalStorage
-            )
-
-            const savedPlanFromIndexedDB = await this.loadFromIndexedDB()
-            console.log('Loaded plan from IndexedDB:', savedPlanFromIndexedDB)
-
-            const mergedPlan = this.mergePlans(
-                savedPlanFromIndexedDB,
-                savedPlanFromLocalStorage
-            )
-
-            if (mergedPlan) {
-                this.allMyWorkout = this.parseWorkouts(
-                    mergedPlan.workouts || []
-                )
-            } else {
-                this.resetPlan()
-            }
-        } catch (error) {
-            console.error('Error loading training plan:', error)
-        }
-    }
-
-    // load plan helpers
-    parseWorkouts(workouts) {
-        return workouts.map((workout) => {
-            return new Workout(
-                workout.type,
-                workout.distance,
-                workout.duration,
-                new Date(workout.date)
-            )
-        })
-    }
-
     resetPlan() {
         this.allMyWorkout = []
-    }
-
-    loadFromLocalStorage() {
-        const savedPlan = window.localStorage.getItem('trainingPlan')
-        return savedPlan ? JSON.parse(savedPlan) : null
     }
 
     mergePlans(savedPlanFromDatabase, savedPlanFromLocalStorage) {
