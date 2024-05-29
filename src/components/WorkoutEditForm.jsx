@@ -61,7 +61,7 @@ function WorkoutEditForm({ workout, onSubmit, onCancel, onRevertChanges }) {
                 min={1}
                 value={workoutDistance.toString()}
                 onChange={(e) => setWorkoutDistance(e.target.value)}
-                step={0.01}
+                step={0.1}
             />
             <InputField
                 label='Duration (mins): '

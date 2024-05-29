@@ -11,20 +11,20 @@ export default class Workout {
             case 'run':
                 return {
                     distance: this.distance,
-                    duration: this.duration / 60, // Convert to minutes
-                    pace: this.duration / 60 / (this.distance / 1000), // minutes per kilometer
+                    duration: this.duration / 60, // Convert to hours
+                    pace: this.duration / this.distance, // minutes per kilometer
                 }
             case 'swim':
                 return {
                     distance: this.distance,
-                    duration: this.duration, // Duration is in minutes
-                    pace: this.duration / (this.distance / 1000), // minutes per meter
+                    duration: this.duration / 60, // Convert to hours
+                    pace: this.duration / this.distance, // minutes per kilometer
                 }
             case 'bike':
                 return {
                     distance: this.distance,
-                    duration: this.duration / 60, // Convert to minutes
-                    speed: this.distance / 1000 / (this.duration / 3600), // kilometers per hour
+                    duration: this.duration / 60, // Convert to hours
+                    speed: this.distance / (this.duration / 60), // kilometers per hour
                 }
             default:
                 throw new Error('Invalid workout type')

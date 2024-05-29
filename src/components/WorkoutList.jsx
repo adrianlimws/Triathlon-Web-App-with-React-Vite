@@ -24,18 +24,29 @@ function WorkoutList({ workouts, onDeleteWorkout, onEditWorkout }) {
                         return (
                             <>
                                 <div>
-                                    <strong>Pace/Speed:</strong>{' '}
-                                    {metrics.pace
-                                        ? `${metrics.pace.toFixed(2)} min/km`
-                                        : `${metrics.speed.toFixed(2)} km/h`}
+                                    <strong>
+                                        {workout.type === 'bike'
+                                            ? 'Speed'
+                                            : 'Pace'}
+                                        :
+                                    </strong>{' '}
+                                    {workout.type === 'bike'
+                                        ? `${metrics.speed.toFixed(2)} km/h`
+                                        : `${metrics.pace.toFixed(2)} min/km`}
                                 </div>
                             </>
                         )
                     })()}
-                    <button onClick={() => onDeleteWorkout(workout)}>
+                    <button
+                        className='btn-delete'
+                        onClick={() => onDeleteWorkout(workout)}
+                    >
                         Delete
                     </button>
-                    <button onClick={() => onEditWorkout(workout, index)}>
+                    <button
+                        className='btn-edit'
+                        onClick={() => onEditWorkout(workout, index)}
+                    >
                         Edit
                     </button>
                 </li>
