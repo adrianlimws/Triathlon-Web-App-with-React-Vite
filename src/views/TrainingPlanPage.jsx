@@ -6,8 +6,6 @@ import WorkoutList from '../components/WorkoutList'
 import WorkoutEditForm from '../components/WorkoutEditForm'
 import SortSearch from '../components/SortSearch'
 import TotalMetrics from '../components/TotalMetrics'
-import TrainingPlan from '../models/trainingplan'
-import Workout from '../models/workout'
 
 function TrainingPlanPage({ viewModel }) {
     const [workoutType, setWorkoutType] = useState('run')
@@ -59,7 +57,7 @@ function TrainingPlanPage({ viewModel }) {
         try {
             viewModel.addWorkout(
                 workoutType,
-                parseFloat(workoutDistance),
+                workoutDistance,
                 workoutDuration,
                 workoutDate
             )
@@ -132,17 +130,17 @@ function TrainingPlanPage({ viewModel }) {
         workoutDate
     ) => {
         try {
-            const updatedWorkout = new Workout(
+            viewModel.updateWorkout(
+                editedWorkoutIndex,
                 workoutType,
-                parseFloat(workoutDistance),
-                parseInt(workoutDuration),
-                new Date(workoutDate)
+                workoutDistance,
+                workoutDuration,
+                workoutDate
             )
-            viewModel.updateWorkout(editedWorkoutIndex, updatedWorkout)
             setTrainingPlan(viewModel.getTrainingPlan())
             setEditedWorkout(null)
             setEditedWorkoutIndex(null)
-            setOriginalWorkout({ ...updatedWorkout })
+            setOriginalWorkout(null)
         } catch (err) {
             setError('An error occurred while updating the workout')
         }
@@ -177,47 +175,13 @@ function TrainingPlanPage({ viewModel }) {
 
     const handleLoadPlan = async (databaseName) => {
         try {
-            const loadedPlanFromIndexedDB = await viewModel.loadFromIndexedDB(
-                databaseName
-            )
-            if (loadedPlanFromIndexedDB) {
-                const newTrainingPlan = new TrainingPlan()
-                newTrainingPlan.allMyWorkout =
-                    loadedPlanFromIndexedDB.workouts.map(
-                        (workout) =>
-                            new Workout(
-                                workout.type,
-                                workout.distance,
-                                workout.duration,
-                                new Date(workout.date)
-                            )
-                    )
-                setTrainingPlan(newTrainingPlan)
-                viewModel.trainingPlan = newTrainingPlan
-                viewModel.saveToLocalStorage()
-                console.log('Training plan loaded from IndexedDB')
+            const loadedPlan = await viewModel.loadPlan(databaseName)
+            if (loadedPlan) {
+                setTrainingPlan(loadedPlan)
+                console.log('Training plan loaded')
             } else {
-                const loadedPlanFromLocalStorage =
-                    viewModel.loadFromLocalStorage()
-                if (loadedPlanFromLocalStorage) {
-                    const newTrainingPlan = new TrainingPlan()
-                    newTrainingPlan.allMyWorkout =
-                        loadedPlanFromLocalStorage.workouts.map(
-                            (workout) =>
-                                new Workout(
-                                    workout.type,
-                                    workout.distance,
-                                    workout.duration,
-                                    new Date(workout.date)
-                                )
-                        )
-                    setTrainingPlan(newTrainingPlan)
-                    viewModel.trainingPlan = newTrainingPlan
-                    console.log('Training plan loaded from localStorage')
-                } else {
-                    console.log('No saved training plan found')
-                    alert('No existing plans can be loaded.')
-                }
+                console.log('No saved training plan found')
+                alert('No existing plans can be loaded.')
             }
         } catch (error) {
             console.error('Error loading training plan:', error)
