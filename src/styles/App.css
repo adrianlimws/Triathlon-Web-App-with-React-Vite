@@ -23,7 +23,6 @@
     align-self: flex-start;
     border: none;
     border-radius: 4px;
-    background-color: #4caf50;
     color: white;
     cursor: pointer;
     padding: 8px 16px;
@@ -46,6 +45,35 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 8px;
+}
+
+.db-form button,
+.workout-form button {
+    width: 100%;
+}
+
+.btn-update {
+    background-color: rgb(219, 182, 102);
+}
+
+.btn-update:hover {
+    background-color: rgb(173, 144, 81);
+}
+
+.btn-revert {
+    background-color: #4caf50;
+}
+
+.btn-revert:hover {
+    background-color: #45a049;
+}
+
+.btn-cancel {
+    background-color: rgb(199, 57, 57);
+}
+
+.btn-cancel:hover {
+    background-color: rgb(158, 45, 45);
 }
 
 .btn-delete {

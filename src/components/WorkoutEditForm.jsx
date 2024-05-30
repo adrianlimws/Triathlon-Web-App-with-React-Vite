@@ -77,11 +77,17 @@ function WorkoutEditForm({ workout, onSubmit, onCancel, onRevertChanges }) {
                 onChange={(e) => setWorkoutDate(e.target.value)}
             />
             <div className='edit-input-field'>
-                <button type='button' onClick={handleRevertChanges}>
+                <button
+                    className='btn-revert'
+                    type='button'
+                    onClick={handleRevertChanges}
+                >
                     Revert Changes
                 </button>
-                <button type='submit'>Update Workout</button>
-                <button type='button' onClick={onCancel}>
+                <button className='btn-update' type='submit'>
+                    Update Workout
+                </button>
+                <button className='btn-cancel' type='button' onClick={onCancel}>
                     Cancel
                 </button>
             </div>

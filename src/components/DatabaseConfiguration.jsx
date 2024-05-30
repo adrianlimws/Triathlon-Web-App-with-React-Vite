@@ -23,39 +23,33 @@ function DatabaseConfig({ onSubmit, onLoadPlan }) {
         <div className='db-form'>
             <form onSubmit={handleSubmit}>
                 <div className='input-field'>
-                    <label>
-                        Database Type:
-                        <select
-                            value={databaseType}
-                            onChange={(e) => setDatabaseType(e.target.value)}
-                        >
-                            <option value='indexedDB'>IndexedDB</option>
-                        </select>
-                    </label>
+                    <label>Database Type:</label>
+                    <select
+                        value={databaseType}
+                        onChange={(e) => setDatabaseType(e.target.value)}
+                    >
+                        <option value='indexedDB'>IndexedDB</option>
+                    </select>
                 </div>
                 <div className='input-field'>
-                    <label>
-                        Database Name:
-                        <input
-                            type='text'
-                            value={databaseName}
-                            onChange={(e) => setDatabaseName(e.target.value)}
-                        />
-                    </label>
+                    <label>Database Name:</label>
+                    <input
+                        type='text'
+                        value={databaseName}
+                        onChange={(e) => setDatabaseName(e.target.value)}
+                    />
                 </div>
                 <button className='db-config-button' type='submit'>
                     Set Database
                 </button>
             </form>
             <div className='input-field'>
-                <label>
-                    Load from Database:
-                    <input
-                        type='text'
-                        value={loadDatabaseName}
-                        onChange={(e) => setLoadDatabaseName(e.target.value)}
-                    />
-                </label>
+                <label>Load from DB:</label>
+                <input
+                    type='text'
+                    value={loadDatabaseName}
+                    onChange={(e) => setLoadDatabaseName(e.target.value)}
+                />
             </div>
             <button className='db-config-button' onClick={handleLoadPlan}>
                 Load Plan
