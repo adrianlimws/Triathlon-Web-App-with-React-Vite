@@ -192,14 +192,11 @@ function TrainingPlanPage({ viewModel }) {
         <>
             {trainingPlan ? (
                 <>
-                    <div className='plan-header'>
-                        <h2 className='tp-title'>Training Plan</h2>
-                        <DatabaseConfig
-                            className='database-config'
-                            onSubmit={handleDatabaseConfig}
-                            onLoadPlan={handleLoadPlan}
-                        />
-                    </div>
+                    <h2>Training Plan</h2>
+                    <DatabaseConfig
+                        onSubmit={handleDatabaseConfig}
+                        onLoadPlan={handleLoadPlan}
+                    />
 
                     <div className='workout-form'>
                         {editedWorkout ? (

@@ -3,21 +3,25 @@
 }
 
 .training-plan,
+.db-form,
 .workout-form,
 .workout-list {
     margin-bottom: 2rem;
 }
 
-.plan-header,
-.workout-form,
-.workout-edit {
-    display: flex;
-    flex-direction: column;
+.workout-form {
+    border-top: 1px solid;
+    padding: 1rem 0;
 }
 
-.workout-form {
-    border-bottom: 1px solid;
-    padding: 1rem 0;
+.workout-form button {
+    align-self: flex-start;
+    border: none;
+    border-radius: 4px;
+    background-color: #4caf50;
+    color: white;
+    cursor: pointer;
+    padding: 8px 16px;
 }
 
 .edit-input-field {
@@ -44,16 +48,6 @@
     padding: 8px;
 }
 
-.workout-form button {
-    align-self: flex-start;
-    border: none;
-    border-radius: 4px;
-    background-color: #4caf50;
-    color: white;
-    cursor: pointer;
-    padding: 8px 16px;
-}
-
 .btn-delete {
     background-color: rgb(199, 57, 57);
 }
@@ -70,6 +64,7 @@
     background-color: rgb(37, 37, 170);
 }
 
+/* .db-form, */
 .total-metrics {
     background-color: #f9f9f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
