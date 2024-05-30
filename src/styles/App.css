@@ -9,6 +9,11 @@
     margin-bottom: 2rem;
 }
 
+.edit-input-field {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 .workout-form {
     border-top: 1px solid;
     padding: 1rem 0;
@@ -22,11 +27,6 @@
     color: white;
     cursor: pointer;
     padding: 8px 16px;
-}
-
-.edit-input-field {
-    align-items: center;
-    margin-bottom: 10px;
 }
 
 .input-field {
