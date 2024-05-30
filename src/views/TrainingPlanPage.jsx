@@ -185,6 +185,9 @@ function TrainingPlanPage({ viewModel }) {
             }
         } catch (error) {
             console.error('Error loading training plan:', error)
+            alert(
+                'Failed to load training plan. Please check the database name.'
+            )
         }
     }
 

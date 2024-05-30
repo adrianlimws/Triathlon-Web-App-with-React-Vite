@@ -15,6 +15,11 @@ function DatabaseConfig({ onSubmit, onLoadPlan }) {
     }
 
     const handleLoadPlan = () => {
+        if (loadDatabaseName.trim() === '') {
+            alert('Please enter a database name.')
+            return
+        }
+
         onLoadPlan(loadDatabaseName)
         alert(`You have loaded ${loadDatabaseName} from the database.`)
     }
