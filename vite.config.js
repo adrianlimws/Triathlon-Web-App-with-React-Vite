@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import mkcert from 'vite-plugin-mkcert'
 import { VitePWA } from 'vite-plugin-pwa'
+import mkcert from 'vite-plugin-mkcert'
 
 export default defineConfig({
     server: { https: true },
@@ -41,6 +41,34 @@ export default defineConfig({
                         sizes: '512x512',
                         type: 'image/png',
                         purpose: 'maskable',
+                    },
+                ],
+                file_handlers: [
+                    {
+                        action: './',
+                        accept: {
+                            'text/plain': ['.txt'],
+                        },
+                    },
+                ],
+            },
+            workbox: {
+                globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+                navigateFallback: null,
+                runtimeCaching: [
+                    {
+                        urlPattern: /^http:\/\/localhost:\d+\/.*/,
+                        handler: 'NetworkFirst',
+                        options: {
+                            cacheName: 'api-cache',
+                            expiration: {
+                                maxEntries: 50,
+                                maxAgeSeconds: 60 * 60 * 24,
+                            },
+                            cacheableResponse: {
+                                statuses: [0, 200],
+                            },
+                        },
                     },
                 ],
             },

@@ -254,4 +254,58 @@ export default class TrainingPlanViewModel {
             }
         })
     }
+
+    async saveToFile() {
+        try {
+            const handle = await window.showSaveFilePicker({
+                types: [
+                    {
+                        description: 'Text Files',
+                        accept: { 'text/plain': ['.txt'] },
+                    },
+                ],
+            })
+            const writable = await handle.createWritable()
+            const planData = {
+                workouts: this.trainingPlan.allMyWorkout,
+            }
+            await writable.write(JSON.stringify(planData, null, 2))
+            await writable.close()
+            console.log('Training plan saved to file')
+        } catch (error) {
+            console.error('Error saving training plan to file:', error)
+            throw error
+        }
+    }
+
+    async loadFromFile() {
+        try {
+            const [handle] = await window.showOpenFilePicker({
+                types: [
+                    {
+                        description: 'Text Files',
+                        accept: { 'text/plain': ['.txt'] },
+                    },
+                ],
+            })
+            const file = await handle.getFile()
+            const contents = await file.text()
+            const planData = JSON.parse(contents)
+            this.trainingPlan = new TrainingPlan()
+            this.trainingPlan.allMyWorkout = planData.workouts.map(
+                (workout) =>
+                    new Workout(
+                        workout.type,
+                        workout.distance,
+                        workout.duration,
+                        new Date(workout.date)
+                    )
+            )
+            console.log('Training plan loaded from file')
+            return this.trainingPlan
+        } catch (error) {
+            console.error('Error loading training plan from file:', error)
+            throw error
+        }
+    }
 }

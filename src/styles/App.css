@@ -2,13 +2,6 @@
     padding: 0 2rem;
 }
 
-.training-plan,
-.db-form,
-.workout-form,
-.workout-list {
-    margin-bottom: 2rem;
-}
-
 .edit-input-field {
     display: flex;
     justify-content: space-evenly;
@@ -129,4 +122,15 @@
 .sort-section select,
 .search-section input {
     margin-right: 10px;
+}
+
+.btn-file-api {
+    background-color: #a17541;
+    color: #fff;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-file-api:hover {
+    background-color: #644929;
 }

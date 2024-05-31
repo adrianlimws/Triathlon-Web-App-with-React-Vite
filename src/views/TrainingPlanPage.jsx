@@ -191,6 +191,31 @@ function TrainingPlanPage({ viewModel }) {
         }
     }
 
+    const handleSaveToFile = async () => {
+        try {
+            await viewModel.saveToFile()
+            alert('Training plan saved to file')
+        } catch (error) {
+            console.error('Error saving training plan to file:', error)
+            alert('Failed to save training plan to file')
+        }
+    }
+
+    const handleLoadFromFile = async () => {
+        try {
+            const loadedPlan = await viewModel.loadFromFile()
+            if (loadedPlan) {
+                setTrainingPlan(loadedPlan)
+                alert('Training plan loaded from file')
+            } else {
+                alert('No training plan found in the file')
+            }
+        } catch (error) {
+            console.error('Error loading training plan from file:', error)
+            alert('Failed to load training plan from file')
+        }
+    }
+
     return (
         <>
             {trainingPlan ? (
@@ -200,7 +225,12 @@ function TrainingPlanPage({ viewModel }) {
                         onSubmit={handleDatabaseConfig}
                         onLoadPlan={handleLoadPlan}
                     />
-
+                    <button
+                        className='btn-file-api'
+                        onClick={handleLoadFromFile}
+                    >
+                        Load from File
+                    </button>
                     <div className='workout-form'>
                         {editedWorkout ? (
                             <WorkoutEditForm
@@ -243,6 +273,12 @@ function TrainingPlanPage({ viewModel }) {
                                 onEditWorkout={handleEditWorkout}
                             />
                             <button onClick={handleSavePlan}>Save Plan</button>
+                            <button
+                                className='btn-file-api'
+                                onClick={handleSaveToFile}
+                            >
+                                Save to File
+                            </button>
                         </>
                     ) : (
                         <div>
